@@ -1,6 +1,6 @@
 {
   "name": "iptables Firewall Basics Lab",
-  "image": "ghcr.io/srl-labs/containerlab:latest",
+  "image": "ghcr.io/srl-labs/containerlab/devcontainer-dind-slim:0.68.0",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
