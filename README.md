@@ -13,6 +13,8 @@ This repository provides **9 free, containerized labs** (3 per certification) de
 
 **No VMs. No simulators. Real Linux networking in containers.**
 
+> 💡 **Looking for full exam prep?** Visit [PingToPass.com](https://pingtopass.com) for practice exams, study guides, and comprehensive CompTIA certification resources!
+
 ---
 
 ## 📚 Available Labs
@@ -305,7 +307,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 - 🐛 **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/comptia-certification-labs/issues)
 - 💬 **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/comptia-certification-labs/discussions)
-- 📧 **Email:** your-email@example.com
+- 🎓 **Need Exam Help?** Check out [PingToPass.com](https://pingtopass.com) for comprehensive CompTIA exam preparation resources
 
 ---
 
