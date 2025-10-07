@@ -61,7 +61,7 @@ Everything is pre-configured. No setup required.
 
 **Clone and run:**
 ```bash
-git clone https://github.com/YOUR_USERNAME/comptia-certification-labs.git
+git clone https://github.com/ciscoittech/comptia-certification-labs.git
 cd comptia-certification-labs/network-plus/01-static-routing-basics
 sudo containerlab deploy -t topology.clab.yml
 ```
@@ -305,8 +305,8 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 ## 📬 Support & Community
 
-- 🐛 **Bug Reports:** [Open an issue](https://github.com/YOUR_USERNAME/comptia-certification-labs/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/comptia-certification-labs/discussions)
+- 🐛 **Bug Reports:** [Open an issue](https://github.com/ciscoittech/comptia-certification-labs/issues)
+- 💬 **Discussions:** [GitHub Discussions](https://github.com/ciscoittech/comptia-certification-labs/discussions)
 - 🎓 **Need Exam Help?** Check out [PingToPass.com](https://pingtopass.com) for comprehensive CompTIA exam preparation resources
 
 ---
