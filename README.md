@@ -197,9 +197,7 @@ lab-name/
 ├── topology.clab.yml      # Container topology
 ├── configs/               # Pre-built configurations
 ├── scripts/
-│   ├── deploy.sh         # One-command deployment
-│   ├── validate.sh       # Automated testing
-│   └── cleanup.sh        # Clean shutdown
+│   └── validate.sh       # Automated testing
 └── .devcontainer/         # GitHub Codespaces config
 ```
 
@@ -208,7 +206,6 @@ lab-name/
 - 🎯 Exam objective mapping
 - 🔬 Hands-on exercises
 - ✅ Automated validation tests
-- 🧹 Easy cleanup
 
 ---
 
