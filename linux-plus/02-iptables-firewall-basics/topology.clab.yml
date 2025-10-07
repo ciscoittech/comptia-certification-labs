@@ -1,0 +1,49 @@
+name: iptables-firewall-basics
+
+topology:
+  nodes:
+    # Firewall
+    firewall:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils iptables nginx tcpdump
+        - ip addr add 10.1.1.1/24 dev eth1
+        - ip addr add 10.2.2.1/24 dev eth2
+        - sysctl -w net.ipv4.ip_forward=1
+        # Default DROP policy
+        - iptables -P INPUT ACCEPT
+        - iptables -P FORWARD DROP
+        - iptables -P OUTPUT ACCEPT
+        # Allow established/related connections
+        - iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+        # Allow HTTP from client to webserver
+        - iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
+        # Allow ping from client to webserver
+        - iptables -A FORWARD -i eth1 -o eth2 -p icmp -j ACCEPT
+
+    # Webserver
+    webserver:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils nginx
+        - ip addr add 10.2.2.10/24 dev eth1
+        - ip route add default via 10.2.2.1
+        # Start nginx
+        - mkdir -p /run/nginx
+        - echo "<h1>Welcome to the webserver!</h1>" > /usr/share/nginx/html/index.html
+        - nginx
+
+    # Client
+    client:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils tcpdump curl nmap
+        - ip addr add 10.1.1.10/24 dev eth1
+        - ip route add default via 10.1.1.1
+
+  links:
+    - endpoints: ["firewall:eth1", "client:eth1"]
+    - endpoints: ["firewall:eth2", "webserver:eth1"]

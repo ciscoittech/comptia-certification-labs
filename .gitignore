@@ -1,0 +1,38 @@
+# Container lab generated files
+clab-*/
+*.clab.yml.bak
+
+# Docker
+.docker/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+venv/
+env/
+
+# Backup files
+*.bak
+*.backup
+
+# Test outputs
+test-output/

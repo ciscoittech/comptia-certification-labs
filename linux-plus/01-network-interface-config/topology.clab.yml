@@ -1,0 +1,24 @@
+name: network-interface-config
+
+topology:
+  nodes:
+    # Host 1
+    host1:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils tcpdump
+        - ip addr add 192.168.1.10/24 dev eth1
+        - ip link set eth1 up
+
+    # Host 2
+    host2:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils tcpdump
+        - ip addr add 192.168.1.20/24 dev eth1
+        - ip link set eth1 up
+
+  links:
+    - endpoints: ["host1:eth1", "host2:eth1"]

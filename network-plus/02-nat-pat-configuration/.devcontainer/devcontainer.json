@@ -1,0 +1,16 @@
+{
+  "name": "NAT/PAT Configuration Lab",
+  "image": "ghcr.io/srl-labs/containerlab:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "containerlab version",
+  "remoteUser": "root"
+}

@@ -1,0 +1,28 @@
+name: ssh-key-authentication
+
+topology:
+  nodes:
+    # SSH Server
+    ssh-server:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils openssh-server
+        - ip addr add 192.168.1.10/24 dev eth1
+        # Configure SSH
+        - ssh-keygen -A
+        - mkdir -p /root/.ssh
+        - chmod 700 /root/.ssh
+        # Start SSH daemon
+        - /usr/sbin/sshd -D &
+
+    # SSH Client
+    ssh-client:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils openssh-client
+        - ip addr add 192.168.1.20/24 dev eth1
+
+  links:
+    - endpoints: ["ssh-server:eth1", "ssh-client:eth1"]

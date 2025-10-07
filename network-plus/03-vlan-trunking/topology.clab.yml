@@ -1,0 +1,120 @@
+name: vlan-trunking-basics
+
+topology:
+  nodes:
+    # Switch 1 - Core switch with trunk ports and inter-VLAN routing
+    sw1:
+      kind: linux
+      image: alpine:latest
+      exec:
+        # Install required packages
+        - apk add --no-cache iproute2 bridge-utils tcpdump
+        # Create VLAN-aware bridge
+        - ip link add name br0 type bridge vlan_filtering 1
+        - ip link set br0 up
+        # Add physical interfaces to bridge
+        - ip link set eth1 master br0
+        - ip link set eth2 master br0
+        - ip link set eth3 master br0
+        # Configure trunk port (eth1 to sw2) - allow VLANs 10, 20, 30
+        - bridge vlan add vid 10 dev eth1
+        - bridge vlan add vid 20 dev eth1
+        - bridge vlan add vid 30 dev eth1
+        - bridge vlan del vid 1 dev eth1
+        # Configure access ports
+        - bridge vlan add vid 10 dev eth2 pvid untagged
+        - bridge vlan add vid 20 dev eth3 pvid untagged
+        - bridge vlan del vid 1 dev eth2
+        - bridge vlan del vid 1 dev eth3
+        # Add VLAN interfaces for inter-VLAN routing (Layer 3)
+        - ip link add link br0 name br0.10 type vlan id 10
+        - ip link add link br0 name br0.20 type vlan id 20
+        - ip link add link br0 name br0.30 type vlan id 30
+        - ip link set br0.10 up
+        - ip link set br0.20 up
+        - ip link set br0.30 up
+        - ip addr add 10.10.10.1/24 dev br0.10
+        - ip addr add 10.10.20.1/24 dev br0.20
+        - ip addr add 10.10.30.1/24 dev br0.30
+        # Enable IP forwarding for inter-VLAN routing
+        - sysctl -w net.ipv4.ip_forward=1
+      binds:
+        - configs/sw1:/config:ro
+
+    # Switch 2 - Access switch with trunk uplink
+    sw2:
+      kind: linux
+      image: alpine:latest
+      exec:
+        # Install required packages
+        - apk add --no-cache iproute2 bridge-utils tcpdump
+        # Create VLAN-aware bridge
+        - ip link add name br0 type bridge vlan_filtering 1
+        - ip link set br0 up
+        # Add physical interfaces to bridge
+        - ip link set eth1 master br0
+        - ip link set eth2 master br0
+        - ip link set eth3 master br0
+        # Configure trunk port (eth1 to sw1) - allow VLANs 10, 20
+        - bridge vlan add vid 10 dev eth1
+        - bridge vlan add vid 20 dev eth1
+        - bridge vlan del vid 1 dev eth1
+        # Configure access ports
+        - bridge vlan add vid 10 dev eth2 pvid untagged
+        - bridge vlan add vid 20 dev eth3 pvid untagged
+        - bridge vlan del vid 1 dev eth2
+        - bridge vlan del vid 1 dev eth3
+      binds:
+        - configs/sw2:/config:ro
+
+    # Client 1 - VLAN 10 (Engineering)
+    client1:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 10.10.10.10/24 dev eth1
+        - ip route add default via 10.10.10.1
+        - apk add --no-cache iproute2 iputils bind-tools tcpdump
+      binds:
+        - configs/client1:/config:ro
+
+    # Client 2 - VLAN 20 (Sales)
+    client2:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 10.10.20.10/24 dev eth1
+        - ip route add default via 10.10.20.1
+        - apk add --no-cache iproute2 iputils bind-tools tcpdump
+      binds:
+        - configs/client2:/config:ro
+
+    # Client 3 - VLAN 10 (Engineering)
+    client3:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 10.10.10.11/24 dev eth1
+        - ip route add default via 10.10.10.1
+        - apk add --no-cache iproute2 iputils bind-tools tcpdump
+
+    # Client 4 - VLAN 20 (Sales)
+    client4:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 10.10.20.11/24 dev eth1
+        - ip route add default via 10.10.20.1
+        - apk add --no-cache iproute2 iputils bind-tools tcpdump
+
+  links:
+    # Trunk link between sw1 and sw2
+    - endpoints: ["sw1:eth1", "sw2:eth1"]
+
+    # Access ports on sw2
+    - endpoints: ["sw2:eth2", "client1:eth1"]
+    - endpoints: ["sw2:eth3", "client2:eth1"]
+
+    # Access ports on sw1 (for inter-VLAN routing demo)
+    - endpoints: ["sw1:eth2", "client3:eth1"]
+    - endpoints: ["sw1:eth3", "client4:eth1"]
