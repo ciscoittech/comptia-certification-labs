@@ -1,12 +1,13 @@
 {
   "name": "CompTIA Certification Labs",
   "image": "ghcr.io/srl-labs/containerlab/devcontainer-dind-slim:0.68.0",
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
   "runArgs": [
-    "--privileged",
-    "--network=host"
-  ],
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    "--privileged"
   ],
   "customizations": {
     "vscode": {
@@ -22,6 +23,6 @@
       }
     }
   },
-  "postCreateCommand": "containerlab version && docker pull alpine:latest && docker pull ubuntu:22.04 && echo '\n✅ Environment ready! Navigate to any lab directory and run: ./scripts/deploy.sh\n'",
+  "postCreateCommand": "containerlab version && docker pull alpine:latest && docker pull ubuntu:22.04 && echo '\n✅ Environment ready! Navigate to any lab directory and run: sudo containerlab deploy -t topology.clab.yml\n'",
   "remoteUser": "vscode"
 }

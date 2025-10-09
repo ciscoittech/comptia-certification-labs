@@ -3,7 +3,7 @@
 **Free, hands-on containerized labs for Network+, Linux+, and Security+ exam preparation**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Codespaces](https://img.shields.io/badge/Launch-Codespace-blue?logo=github)](https://github.com/codespaces)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ciscoittech/comptia-certification-labs?quickstart=1)
 
 ---
 
