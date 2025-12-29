@@ -69,7 +69,7 @@ topology:
         - apk add --no-cache iproute2 iputils python3
         - ip addr add 203.0.113.10/24 dev eth1
         - ip route replace default via 203.0.113.1
-        - nohup python3 -m http.server 80 > /dev/null 2>&1 &
+        - sh -c 'nohup python3 -m http.server 80 > /dev/null 2>&1 &'
 
   links:
     - endpoints: ["firewall:eth1", "hr-client:eth1"]

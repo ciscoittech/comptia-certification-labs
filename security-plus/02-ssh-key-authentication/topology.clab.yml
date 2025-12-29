@@ -13,8 +13,8 @@ topology:
         - ssh-keygen -A
         - mkdir -p /root/.ssh
         - chmod 700 /root/.ssh
-        # Start SSH daemon
-        - /usr/sbin/sshd -D &
+        # Start SSH daemon (without -D, it daemonizes itself)
+        - /usr/sbin/sshd
 
     # SSH Client
     ssh-client:
