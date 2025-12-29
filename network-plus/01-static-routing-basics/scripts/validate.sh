@@ -25,10 +25,10 @@ run_test() {
 
     if eval "$command" &> /dev/null; then
         echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
+        ((PASSED++)) || true
     else
         echo -e "${RED}❌ FAIL${NC}"
-        ((FAILED++))
+        ((FAILED++)) || true
     fi
 }
 
