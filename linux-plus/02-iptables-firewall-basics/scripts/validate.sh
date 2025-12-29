@@ -72,7 +72,7 @@ echo "-------------------------------------------"
 run_test "Nginx running on webserver" \
     "docker exec clab-iptables-firewall-basics-webserver sh -c 'ps | grep nginx | grep -v grep'"
 run_test "Nginx listening on port 80" \
-    "docker exec clab-iptables-firewall-basics-webserver netstat -tuln | grep ':80'"
+    "docker exec clab-iptables-firewall-basics-webserver ss -tuln | grep ':80'"
 
 echo ""
 echo "6. Connectivity Tests"

@@ -46,7 +46,7 @@ run_test "Firewall external IP (203.0.113.1)" \
 run_test "Firewall DMZ IP (10.10.10.1)" \
     "docker exec clab-dmz-network-design-firewall ip addr show eth2 | grep '10.10.10.1'"
 run_test "Firewall internal IP (192.168.1.1)" \
-    "docker exec clab-dmz-network-design-firewall ip addr show eth3 | grep '192.168.1.1'"
+    "docker exec clab-dmz-network-design-firewall ip addr show br-internal | grep '192.168.1.1'"
 
 echo ""
 echo "3. Firewall Configuration"

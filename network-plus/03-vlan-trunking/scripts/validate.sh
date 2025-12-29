@@ -41,11 +41,11 @@ echo "1. Container Status Checks"
 echo "-------------------------------------------"
 
 run_test "sw1 container running" \
-    "docker exec clab-vlan-trunking-basics-sw1 ip addr show eth1.10" \
+    "docker exec clab-vlan-trunking-basics-sw1 ip addr show br0" \
     "success"
 
 run_test "sw2 container running" \
-    "docker exec clab-vlan-trunking-basics-sw2 ip addr show eth1.10" \
+    "docker exec clab-vlan-trunking-basics-sw2 ip addr show br0" \
     "success"
 
 run_test "client1 container running" \
@@ -64,6 +64,10 @@ run_test "client4 container running" \
     "docker exec clab-vlan-trunking-basics-client4 ip addr show eth1" \
     "success"
 
+run_test "client5 container running (VLAN 30)" \
+    "docker exec clab-vlan-trunking-basics-client5 ip addr show eth1" \
+    "success"
+
 echo ""
 
 # Test 2: VLAN Configuration on sw1
@@ -71,23 +75,23 @@ echo "2. VLAN Interface Configuration"
 echo "-------------------------------------------"
 
 run_test "sw1 VLAN 10 interface exists" \
-    "docker exec clab-vlan-trunking-basics-sw1 ip addr show eth1.10 | grep '10.10.10.1'" \
+    "docker exec clab-vlan-trunking-basics-sw1 ip addr show br0.10 | grep '10.10.10.1'" \
     "success"
 
 run_test "sw1 VLAN 20 interface exists" \
-    "docker exec clab-vlan-trunking-basics-sw1 ip addr show eth1.20 | grep '10.10.20.1'" \
+    "docker exec clab-vlan-trunking-basics-sw1 ip addr show br0.20 | grep '10.10.20.1'" \
     "success"
 
 run_test "sw1 VLAN 30 interface exists" \
-    "docker exec clab-vlan-trunking-basics-sw1 ip addr show eth1.30 | grep '10.10.30.1'" \
+    "docker exec clab-vlan-trunking-basics-sw1 ip addr show br0.30 | grep '10.10.30.1'" \
     "success"
 
-run_test "sw2 VLAN 10 interface exists" \
-    "docker exec clab-vlan-trunking-basics-sw2 ip link show eth1.10" \
+run_test "sw2 bridge VLAN filtering configured" \
+    "docker exec clab-vlan-trunking-basics-sw2 bridge vlan show dev eth1 | grep '10'" \
     "success"
 
-run_test "sw2 VLAN 20 interface exists" \
-    "docker exec clab-vlan-trunking-basics-sw2 ip link show eth1.20" \
+run_test "sw2 trunk carries VLAN 20" \
+    "docker exec clab-vlan-trunking-basics-sw2 bridge vlan show dev eth1 | grep '20'" \
     "success"
 
 echo ""
