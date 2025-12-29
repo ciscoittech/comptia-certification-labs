@@ -46,7 +46,7 @@ echo "-------------------------------------------"
 run_test "SSH daemon running on server" \
     "docker exec clab-ssh-key-authentication-ssh-server sh -c 'ps | grep sshd | grep -v grep'"
 run_test "SSH port 22 listening" \
-    "docker exec clab-ssh-key-authentication-ssh-server netstat -tuln | grep ':22'"
+    "docker exec clab-ssh-key-authentication-ssh-server ss -tuln | grep ':22'"
 
 echo ""
 echo "4. SSH Tools Available"

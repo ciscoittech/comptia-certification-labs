@@ -88,7 +88,7 @@ run_test "NAT POSTROUTING rule exists (MASQUERADE)" \
     "docker exec clab-nat-pat-configuration-router iptables -t nat -L POSTROUTING -n | grep -i MASQUERADE"
 
 run_test "FORWARD chain allows eth1 to eth2" \
-    "docker exec clab-nat-pat-configuration-router iptables -L FORWARD -n | grep 'eth1.*eth2.*ACCEPT'"
+    "docker exec clab-nat-pat-configuration-router iptables -L FORWARD -n -v | grep -E 'ACCEPT.*eth1.*eth2'"
 
 run_test "FORWARD chain allows established connections" \
     "docker exec clab-nat-pat-configuration-router iptables -L FORWARD -n | grep 'RELATED,ESTABLISHED'"
