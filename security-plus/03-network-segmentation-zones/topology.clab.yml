@@ -41,7 +41,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils curl
         - ip addr add 10.10.0.10/24 dev eth1
-        - ip route add default via 10.10.0.1
+        - ip route replace default via 10.10.0.1
 
     # Engineering Client
     eng-client:
@@ -50,7 +50,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils curl
         - ip addr add 10.20.0.10/24 dev eth1
-        - ip route add default via 10.20.0.1
+        - ip route replace default via 10.20.0.1
 
     # Guest Client
     guest-client:
@@ -59,7 +59,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils curl
         - ip addr add 10.30.0.10/24 dev eth1
-        - ip route add default via 10.30.0.1
+        - ip route replace default via 10.30.0.1
 
     # Internet Server
     internet-server:
@@ -68,7 +68,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils python3
         - ip addr add 203.0.113.10/24 dev eth1
-        - ip route add default via 203.0.113.1
+        - ip route replace default via 203.0.113.1
         - nohup python3 -m http.server 80 > /dev/null 2>&1 &
 
   links:

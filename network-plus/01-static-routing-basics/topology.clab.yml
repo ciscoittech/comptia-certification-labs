@@ -45,7 +45,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils tcpdump
         - ip addr add 10.1.1.10/24 dev eth1
-        - ip route add default via 10.1.1.1
+        - ip route replace default via 10.1.1.1
 
     # PC2 - Right client
     pc2:
@@ -54,7 +54,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils tcpdump
         - ip addr add 10.3.3.10/24 dev eth1
-        - ip route add default via 10.3.3.3
+        - ip route replace default via 10.3.3.3
 
   links:
     - endpoints: ["r1:eth1", "pc1:eth1"]
