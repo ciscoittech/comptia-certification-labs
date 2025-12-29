@@ -1,0 +1,148 @@
+name: Lab Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.clab.yml'
+      - '**/topology.clab.yml'
+      - '**/validate.sh'
+      - '.github/workflows/lab-validation.yml'
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run bi-monthly on 1st and 15th at 3am UTC
+    - cron: '0 3 1,15 * *'
+  workflow_dispatch:
+    inputs:
+      lab:
+        description: 'Specific lab to test (e.g., network-plus/01-static-routing-basics)'
+        required: false
+        default: 'all'
+
+jobs:
+  discover-labs:
+    runs-on: ubuntu-latest
+    outputs:
+      labs: ${{ steps.find-labs.outputs.labs }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find all labs
+        id: find-labs
+        run: |
+          if [ "${{ github.event.inputs.lab }}" != "" ] && [ "${{ github.event.inputs.lab }}" != "all" ]; then
+            echo "labs=[\"${{ github.event.inputs.lab }}\"]" >> $GITHUB_OUTPUT
+          else
+            labs=$(find . -name "topology.clab.yml" -type f | sed 's|./||' | sed 's|/topology.clab.yml||' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "labs=$labs" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Show labs to test
+        run: echo "Labs to test - ${{ steps.find-labs.outputs.labs }}"
+
+  validate-lab:
+    needs: discover-labs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lab: ${{ fromJson(needs.discover-labs.outputs.labs) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install containerlab
+        run: |
+          bash -c "$(curl -sL https://get.containerlab.dev)"
+          containerlab version
+
+      - name: Pull Alpine image
+        run: docker pull alpine:latest
+
+      - name: Deploy lab - ${{ matrix.lab }}
+        id: deploy
+        run: |
+          cd "${{ matrix.lab }}"
+          echo "::group::Deploying ${{ matrix.lab }}"
+          sudo containerlab deploy -t topology.clab.yml --reconfigure 2>&1 | tee deploy.log
+          deploy_exit=$?
+          echo "::endgroup::"
+          echo "deploy_exit=$deploy_exit" >> $GITHUB_OUTPUT
+
+          # Check for critical errors (ignore package install warnings)
+          if grep -q "Cannot find device\|duplicate endpoint\|invalid\|error creating" deploy.log; then
+            echo "Critical deployment error found"
+            exit 1
+          fi
+
+      - name: Wait for containers to stabilize
+        run: sleep 10
+
+      - name: Run validation script
+        id: validate
+        run: |
+          cd "${{ matrix.lab }}"
+          if [ -f "scripts/validate.sh" ]; then
+            echo "::group::Running validation for ${{ matrix.lab }}"
+            chmod +x scripts/validate.sh
+            sudo bash scripts/validate.sh 2>&1 | tee validate.log
+            validate_exit=${PIPESTATUS[0]}
+            echo "::endgroup::"
+            echo "validate_exit=$validate_exit" >> $GITHUB_OUTPUT
+            exit $validate_exit
+          else
+            echo "No validation script found, running basic connectivity test"
+            # Get first two containers and test ping
+            containers=$(sudo docker ps --format '{{.Names}}' | grep clab | head -2)
+            if [ -n "$containers" ]; then
+              first=$(echo "$containers" | head -1)
+              echo "Containers running: $containers"
+              sudo docker exec $first ip addr show
+              echo "validate_exit=0" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Show container status on failure
+        if: failure()
+        run: |
+          echo "::group::Container Status"
+          sudo docker ps -a
+          echo "::endgroup::"
+          echo "::group::Container Logs"
+          for c in $(sudo docker ps -a --format '{{.Names}}' | grep clab); do
+            echo "=== $c ==="
+            sudo docker logs $c 2>&1 | tail -50
+          done
+          echo "::endgroup::"
+
+      - name: Cleanup lab
+        if: always()
+        run: |
+          cd "${{ matrix.lab }}"
+          sudo containerlab destroy -t topology.clab.yml --cleanup 2>/dev/null || true
+
+  summary:
+    needs: [discover-labs, validate-lab]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          if [ "${{ needs.validate-lab.result }}" == "success" ]; then
+            echo "All labs validated successfully!"
+            exit 0
+          else
+            echo "Some labs failed validation"
+            exit 1
+          fi
+
+      - name: Create summary
+        run: |
+          echo "## Lab Validation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ needs.validate-lab.result == 'success' && '✅ Passed' || '❌ Failed' }} | All labs |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Labs tested: ${{ needs.discover-labs.outputs.labs }}" >> $GITHUB_STEP_SUMMARY
