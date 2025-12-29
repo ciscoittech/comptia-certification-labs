@@ -2,18 +2,22 @@ name: dmz-network-design
 
 topology:
   nodes:
-    # Firewall (3 interfaces)
+    # Firewall (4 interfaces: external, DMZ, internal-client, internal-db)
     firewall:
       kind: linux
       image: alpine:latest
       exec:
-        - apk add --no-cache iproute2 iputils iptables tcpdump
+        - apk add --no-cache iproute2 iputils iptables tcpdump bridge-utils
         # External interface
         - ip addr add 203.0.113.1/24 dev eth1
         # DMZ interface
         - ip addr add 10.10.10.1/24 dev eth2
-        # Internal interface
-        - ip addr add 192.168.1.1/24 dev eth3
+        # Internal network - bridge eth3 and eth4 together
+        - ip link add name br-internal type bridge
+        - ip link set br-internal up
+        - ip link set eth3 master br-internal
+        - ip link set eth4 master br-internal
+        - ip addr add 192.168.1.1/24 dev br-internal
         # Enable forwarding
         - sysctl -w net.ipv4.ip_forward=1
         # Default DROP
@@ -23,11 +27,11 @@ topology:
         # External -> DMZ: Allow HTTP
         - iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
         # DMZ -> Internal: Allow MySQL
-        - iptables -A FORWARD -i eth2 -o eth3 -p tcp --dport 3306 -j ACCEPT
+        - iptables -A FORWARD -i eth2 -o br-internal -p tcp --dport 3306 -j ACCEPT
         # Internal -> DMZ: Allow all
-        - iptables -A FORWARD -i eth3 -o eth2 -j ACCEPT
+        - iptables -A FORWARD -i br-internal -o eth2 -j ACCEPT
         # Internal -> External: Allow all
-        - iptables -A FORWARD -i eth3 -o eth1 -j ACCEPT
+        - iptables -A FORWARD -i br-internal -o eth1 -j ACCEPT
 
     # DMZ Webserver
     dmz-web:
@@ -36,9 +40,9 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils nginx mysql-client
         - ip addr add 10.10.10.10/24 dev eth1
-        - ip route add default via 10.10.10.1
-        - mkdir -p /run/nginx
-        - echo "<h1>DMZ Webserver</h1>" > /usr/share/nginx/html/index.html
+        - ip route replace default via 10.10.10.1
+        - mkdir -p /run/nginx /var/www/html
+        - echo "<h1>DMZ Webserver</h1>" > /var/www/html/index.html
         - nginx
 
     # Internal Database
@@ -48,7 +52,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils mariadb mariadb-client
         - ip addr add 192.168.1.10/24 dev eth1
-        - ip route add default via 192.168.1.1
+        - ip route replace default via 192.168.1.1
         # Initialize database
         - mkdir -p /run/mysqld /var/lib/mysql
         - chown -R mysql:mysql /run/mysqld /var/lib/mysql
@@ -62,7 +66,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils curl
         - ip addr add 192.168.1.20/24 dev eth1
-        - ip route add default via 192.168.1.1
+        - ip route replace default via 192.168.1.1
 
     # External Client
     external-client:
@@ -71,10 +75,10 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils curl
         - ip addr add 203.0.113.10/24 dev eth1
-        - ip route add default via 203.0.113.1
+        - ip route replace default via 203.0.113.1
 
   links:
     - endpoints: ["firewall:eth1", "external-client:eth1"]
     - endpoints: ["firewall:eth2", "dmz-web:eth1"]
     - endpoints: ["firewall:eth3", "internal-client:eth1"]
-    - endpoints: ["firewall:eth3", "internal-db:eth1"]
+    - endpoints: ["firewall:eth4", "internal-db:eth1"]

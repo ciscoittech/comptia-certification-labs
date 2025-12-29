@@ -29,10 +29,10 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils nginx
         - ip addr add 10.2.2.10/24 dev eth1
-        - ip route add default via 10.2.2.1
+        - ip route replace default via 10.2.2.1
         # Start nginx
-        - mkdir -p /run/nginx
-        - echo "<h1>Welcome to the webserver!</h1>" > /usr/share/nginx/html/index.html
+        - mkdir -p /run/nginx /var/www/html
+        - echo "<h1>Welcome to the webserver!</h1>" > /var/www/html/index.html
         - nginx
 
     # Client
@@ -42,7 +42,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils tcpdump curl nmap
         - ip addr add 10.1.1.10/24 dev eth1
-        - ip route add default via 10.1.1.1
+        - ip route replace default via 10.1.1.1
 
   links:
     - endpoints: ["firewall:eth1", "client:eth1"]

@@ -27,7 +27,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils tcpdump curl
         - ip addr add 10.1.1.10/24 dev eth1
-        - ip route add default via 10.1.1.1
+        - ip route replace default via 10.1.1.1
 
     # External server (simulates internet server)
     external-server:
@@ -36,7 +36,7 @@ topology:
       exec:
         - apk add --no-cache iproute2 iputils tcpdump python3
         - ip addr add 203.0.113.10/24 dev eth1
-        - ip route add default via 203.0.113.1
+        - ip route replace default via 203.0.113.1
         # Start simple HTTP server
         - nohup python3 -m http.server 80 > /dev/null 2>&1 &
 
