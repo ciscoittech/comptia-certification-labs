@@ -18,10 +18,10 @@ run_test() {
     echo -n "Testing: $1 ... "
     if eval "$2" &> /dev/null; then
         echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
+        ((PASSED++)) || true
     else
         echo -e "${RED}❌ FAIL${NC}"
-        ((FAILED++))
+        ((FAILED++)) || true
     fi
 }
 
