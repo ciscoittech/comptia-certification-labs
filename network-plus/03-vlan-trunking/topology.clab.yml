@@ -29,6 +29,10 @@ topology:
         - bridge vlan del vid 1 dev eth2
         - bridge vlan del vid 1 dev eth3
         - bridge vlan del vid 1 dev eth4
+        # Add VLANs to bridge itself for local processing
+        - bridge vlan add vid 10 dev br0 self
+        - bridge vlan add vid 20 dev br0 self
+        - bridge vlan add vid 30 dev br0 self
         # Add VLAN interfaces for inter-VLAN routing (Layer 3)
         - ip link add link br0 name br0.10 type vlan id 10
         - ip link add link br0 name br0.20 type vlan id 20
