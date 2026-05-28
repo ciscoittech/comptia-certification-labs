@@ -1,0 +1,24 @@
+name: file-permissions-acl
+
+topology:
+  nodes:
+    server:
+      kind: linux
+      image: ubuntu:22.04
+      exec:
+        - apt-get update -qq && apt-get install -y -qq acl iproute2 sudo nginx > /dev/null 2>&1
+        - useradd -m -s /bin/bash developer
+        - useradd -m -s /bin/bash auditor
+        - useradd -m -s /bin/bash webadmin
+        - groupadd project-team
+        - usermod -aG project-team developer
+        - usermod -aG project-team webadmin
+        - mkdir -p /opt/project /var/www/html /var/log/audit
+        - chown root:project-team /opt/project
+        - chmod 2770 /opt/project
+        - echo "Project data" > /opt/project/data.txt
+        - echo "Web content" > /var/www/html/index.html
+        - echo "Audit log entry 1" > /var/log/audit/access.log
+        - chmod 600 /var/log/audit/access.log
+        - chown root:root /var/log/audit/access.log
+        - setfacl -m u:auditor:r /var/log/audit/access.log

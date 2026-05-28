@@ -46,6 +46,22 @@ This repository provides **9 free, containerized labs** (3 per certification) de
 
 ---
 
+## 🤖 Study with AI Assistance
+
+Stuck on a lab? [Damira AI](https://damiraai.com) is a free AI assistant for network engineers and IT students. It can help you understand what's happening in each lab:
+
+> **Using GitHub Codespaces?** Damira is pre-installed — just add your free API key. See [DAMIRA_SETUP.md](DAMIRA_SETUP.md) for details.
+
+1. Sign up free at [damiraai.com](https://damiraai.com) (no credit card required)
+2. Describe what you're working on or paste your terminal output
+3. Damira explains the concept and helps you troubleshoot
+
+Works great for exam prep — ask it to explain any networking concept in the context of the lab you're working on.
+
+> Full certification study plans available at [PingToPass](https://pingtopass.com)
+
+---
+
 ## 🚀 Quick Start
 
 ### Option 1: GitHub Codespaces (Recommended)

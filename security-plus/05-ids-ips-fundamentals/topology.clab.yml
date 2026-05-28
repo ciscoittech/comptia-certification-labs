@@ -1,0 +1,41 @@
+name: ids-ips-fundamentals
+
+topology:
+  nodes:
+    # IDS/IPS Sensor (inline between attacker and web server)
+    sensor:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache tcpdump iproute2 iputils nmap python3
+        - ip addr add 10.3.1.1/24 dev eth1
+        - ip addr add 10.3.2.1/24 dev eth2
+        - sysctl -w net.ipv4.ip_forward=1
+        - mkdir -p /var/log/ids /etc/ids/rules
+
+    # Web Server (target/victim)
+    web-server:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils nginx
+        - ip addr add 10.3.2.10/24 dev eth1
+        - ip route add default via 10.3.2.1
+        - mkdir -p /run/nginx /var/lib/nginx/html
+        - sh -c 'echo "Secure Web Server" > /var/lib/nginx/html/index.html'
+        - nginx
+
+    # Attacker (generates normal and malicious traffic)
+    attacker:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils nmap curl
+        - ip addr add 10.3.1.10/24 dev eth1
+        - ip route add default via 10.3.1.1
+
+  links:
+    # Attacker-side link (sensor eth1 faces the attacker)
+    - endpoints: ["sensor:eth1", "attacker:eth1"]
+    # Server-side link (sensor eth2 faces the web server)
+    - endpoints: ["sensor:eth2", "web-server:eth1"]

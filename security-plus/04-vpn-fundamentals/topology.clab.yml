@@ -1,0 +1,51 @@
+name: vpn-fundamentals
+
+topology:
+  nodes:
+    # Site A Gateway (WireGuard endpoint)
+    site-a-gw:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache wireguard-tools iproute2 iputils iptables
+        - ip addr add 10.1.1.1/24 dev eth1
+        - ip addr add 172.16.0.1/30 dev eth2
+        - sysctl -w net.ipv4.ip_forward=1
+        - mkdir -p /etc/wireguard
+
+    # Site B Gateway (WireGuard endpoint)
+    site-b-gw:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache wireguard-tools iproute2 iputils iptables
+        - ip addr add 10.2.2.1/24 dev eth1
+        - ip addr add 172.16.0.2/30 dev eth2
+        - sysctl -w net.ipv4.ip_forward=1
+        - mkdir -p /etc/wireguard
+
+    # Host at Site A (LAN client)
+    host-a:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils
+        - ip addr add 10.1.1.10/24 dev eth1
+        - ip route add default via 10.1.1.1
+
+    # Host at Site B (LAN client)
+    host-b:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils
+        - ip addr add 10.2.2.10/24 dev eth1
+        - ip route add default via 10.2.2.1
+
+  links:
+    # Site A LAN
+    - endpoints: ["site-a-gw:eth1", "host-a:eth1"]
+    # WAN link between sites (simulated internet)
+    - endpoints: ["site-a-gw:eth2", "site-b-gw:eth2"]
+    # Site B LAN
+    - endpoints: ["site-b-gw:eth1", "host-b:eth1"]

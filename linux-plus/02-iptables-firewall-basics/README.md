@@ -268,6 +268,39 @@ docker exec clab-iptables-firewall-basics-firewall iptables -L FORWARD -v -n
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "I added a rule but traffic is still blocked. Here's my iptables chain: [paste]"
+- "What's the difference between DROP and REJECT in iptables?"
+- "How do I make iptables rules persistent across reboots?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. iptables processes rules in which order?**
+A) Random  B) Top to bottom, first match wins  C) Bottom to top  D) Alphabetical
+
+<details><summary>Answer</summary>B — iptables evaluates rules sequentially from top to bottom within a chain. The first matching rule's target is applied and processing stops. Rule order is critical — a permissive rule placed above a restrictive rule will match first.</details>
+
+**2. The default policy for a chain applies when:**
+A) The first rule matches  B) No rules match  C) All rules match  D) The chain is empty
+
+<details><summary>Answer</summary>B — The default policy (ACCEPT or DROP) is a catch-all that applies only when no explicit rule in the chain matches the packet. This is why setting the FORWARD chain policy to DROP with an explicit ACCEPT for allowed traffic is a security best practice.</details>
+
+**3. Which iptables option adds a rule to the END of a chain?**
+A) -I  B) -A  C) -D  D) -R
+
+<details><summary>Answer</summary>B — The <code>-A</code> flag appends a rule to the end of the chain. <code>-I</code> inserts at the top (or a specified position), <code>-D</code> deletes a rule, and <code>-R</code> replaces a rule.</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash

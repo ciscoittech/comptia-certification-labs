@@ -1,0 +1,36 @@
+name: dns-fundamentals
+
+topology:
+  nodes:
+    # DNS Server - dnsmasq with local A records
+    dns-server:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache dnsmasq iproute2 iputils bind-tools
+        - ip addr add 10.2.1.1/24 dev eth1
+        - sh -c 'printf "interface=eth1\nlisten-address=10.2.1.1\nno-hosts\naddress=/web.lab.local/10.2.1.10\naddress=/db.lab.local/10.2.1.20\naddress=/mail.lab.local/10.2.1.30\nptr-record=10.2.1.10.in-addr.arpa,web.lab.local\nptr-record=20.2.1.10.in-addr.arpa,db.lab.local\nserver=8.8.8.8\nlog-queries\n" > /etc/dnsmasq.conf'
+        - dnsmasq --no-daemon --log-facility=/var/log/dnsmasq.log &
+
+    # Web Server - static IP, serves as a resolvable host
+    web-server:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils bind-tools
+        - ip addr add 10.2.1.10/24 dev eth1
+        - ip route add default via 10.2.1.1
+
+    # Client - uses DNS server to resolve names
+    client:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - apk add --no-cache iproute2 iputils bind-tools
+        - ip addr add 10.2.1.50/24 dev eth1
+        - ip route add default via 10.2.1.1
+        - sh -c 'echo "nameserver 10.2.1.1" > /etc/resolv.conf'
+
+  links:
+    - endpoints: ["dns-server:eth1", "web-server:eth1"]
+    - endpoints: ["dns-server:eth2", "client:eth1"]

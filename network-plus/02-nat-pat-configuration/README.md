@@ -452,6 +452,39 @@ Look for non-zero packet counts on DROP rules.
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "Explain the difference between SNAT, DNAT, and MASQUERADE in iptables"
+- "My internal host can't reach the internet through NAT. Here's my iptables rules: [paste]"
+- "How does PAT (Port Address Translation) allow multiple hosts to share one public IP?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. Which iptables chain handles NAT for outbound traffic?**
+A) INPUT  B) FORWARD  C) POSTROUTING  D) PREROUTING
+
+<details><summary>Answer</summary>C — The POSTROUTING chain handles source NAT (SNAT/MASQUERADE) for outbound traffic after the routing decision has been made. PREROUTING handles destination NAT (DNAT) for inbound traffic.</details>
+
+**2. MASQUERADE differs from SNAT in that MASQUERADE:**
+A) Is faster  B) Automatically uses the outgoing interface IP  C) Supports more protocols  D) Is more secure
+
+<details><summary>Answer</summary>B — MASQUERADE dynamically uses whatever IP is assigned to the outgoing interface, making it ideal for dynamic IPs (DHCP, PPPoE). SNAT requires a hardcoded IP and is slightly faster for static public IPs.</details>
+
+**3. Which RFC defines private IP address ranges?**
+A) RFC 791  B) RFC 1918  C) RFC 2460  D) RFC 3022
+
+<details><summary>Answer</summary>B — RFC 1918 defines the three private address ranges: 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16. These addresses are not routed on the public internet.</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash

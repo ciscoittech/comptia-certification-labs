@@ -1,12 +1,22 @@
 {
   "name": "Network Segmentation with Zones Lab",
   "image": "ghcr.io/srl-labs/containerlab/devcontainer-dind-slim:0.68.0",
-  "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-  },
+  "runArgs": [
+    "--network=host",
+    "--pid=host",
+    "--privileged"
+  ],
+  "mounts": [
+    "type=bind,src=/var/lib/docker,dst=/var/lib/docker",
+    "type=bind,src=/lib/modules,dst=/lib/modules"
+  ],
   "customizations": {
     "vscode": {
-      "extensions": ["ms-azuretools.vscode-docker"]
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "TerrenceBattlehunt.damira-assistant"
+      ]
     }
   },
   "postCreateCommand": "containerlab version",

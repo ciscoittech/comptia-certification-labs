@@ -358,6 +358,39 @@ docker exec clab-static-routing-basics-r1 ip route add 10.3.3.0/24 via 10.1.2.2
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "I added a static route but traffic still isn't reaching the destination. Here's my routing table: [paste]"
+- "What's the difference between a default route and a specific static route?"
+- "Why does my traceroute show 3 hops instead of 2?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. Which command displays the routing table on a Linux system?**
+A) route -n  B) ip route show  C) netstat -rn  D) All of the above
+
+<details><summary>Answer</summary>D — All three commands display the routing table, though <code>ip route show</code> is the modern preferred command. <code>route -n</code> and <code>netstat -rn</code> are deprecated but still appear on exams.</details>
+
+**2. What happens when a router receives a packet with no matching route and no default route configured?**
+A) Forwards to default gateway  B) Drops the packet  C) Floods all interfaces  D) Sends ICMP unreachable
+
+<details><summary>Answer</summary>B — The router drops the packet. If a default route (0.0.0.0/0) exists, the router forwards to the default gateway instead.</details>
+
+**3. A static route to 10.0.0.0/8 via 192.168.1.1 means:**
+A) All traffic goes to 192.168.1.1  B) Only 10.x.x.x traffic goes to 192.168.1.1  C) 192.168.1.1 is the destination  D) The route is dynamic
+
+<details><summary>Answer</summary>B — The route matches only destination addresses in the 10.0.0.0/8 range. Traffic to all other destinations follows other routes or the default route.</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash

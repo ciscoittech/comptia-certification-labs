@@ -6,7 +6,7 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": ["ms-azuretools.vscode-docker"]
+      "extensions": ["ms-azuretools.vscode-docker", "TerrenceBattlehunt.damira-assistant"]
     }
   },
   "postCreateCommand": "containerlab version",

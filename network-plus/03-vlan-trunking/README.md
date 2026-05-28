@@ -296,6 +296,39 @@ tcpdump -i eth1 -e -n
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "Host on VLAN 10 can't reach host on VLAN 20. Do I need a router?"
+- "What's the difference between an access port and a trunk port?"
+- "How does 802.1Q tagging work on a trunk link?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. Which IEEE standard defines VLAN tagging?**
+A) 802.1D  B) 802.1Q  C) 802.3  D) 802.11
+
+<details><summary>Answer</summary>B — IEEE 802.1Q defines the standard for VLAN tagging on Ethernet networks. It adds a 4-byte tag to Ethernet frames identifying the VLAN. 802.1D is Spanning Tree Protocol.</details>
+
+**2. An access port belongs to:**
+A) All VLANs  B) The native VLAN only  C) A single assigned VLAN  D) The management VLAN
+
+<details><summary>Answer</summary>C — An access port is assigned to a single VLAN and carries untagged frames for end-user devices. The device connected to an access port has no awareness of VLANs.</details>
+
+**3. Inter-VLAN routing requires:**
+A) A Layer 3 device  B) A hub  C) A crossover cable  D) STP
+
+<details><summary>Answer</summary>A — Inter-VLAN routing requires a Layer 3 device (router or Layer 3 switch) because VLANs create separate broadcast domains and Layer 2 switching cannot forward traffic between them.</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash

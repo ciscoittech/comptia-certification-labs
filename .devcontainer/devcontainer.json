@@ -16,13 +16,14 @@
         "ms-vscode.vscode-yaml",
         "redhat.vscode-yaml",
         "ms-python.python",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "TerrenceBattlehunt.damira-assistant"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
   },
-  "postCreateCommand": "containerlab version && docker pull alpine:latest && docker pull ubuntu:22.04 && echo '\n✅ Environment ready! Navigate to any lab directory and run: sudo containerlab deploy -t topology.clab.yml\n'",
+  "postCreateCommand": "containerlab version && docker pull alpine:latest && docker pull ubuntu:22.04 && echo '\n✅ Environment ready! Navigate to any lab directory and run: sudo containerlab deploy -t topology.clab.yml\n' && echo '' && echo '🤖 Damira AI is installed! Get your free API key:' && echo '   1. Sign up at https://damiraai.com (free, no credit card)' && echo '   2. Copy your API key from the dashboard' && echo '   3. VS Code Settings → search Damira → paste key' && echo '   4. Open the Damira chat panel — your AI study buddy for these labs' && echo ''",
   "remoteUser": "vscode"
 }

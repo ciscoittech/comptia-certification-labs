@@ -490,6 +490,39 @@ docker exec clab-network-interface-config-host1 ip neigh show
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "What does 'state DOWN' mean on my eth1 interface?"
+- "How do I add a secondary IP address to an existing interface?"
+- "What's the difference between ip addr and ifconfig?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. Which command brings an interface up on modern Linux?**
+A) ifup eth0  B) ip link set eth0 up  C) ifconfig eth0 up  D) Both B and C
+
+<details><summary>Answer</summary>D — Both <code>ip link set eth0 up</code> (modern iproute2) and <code>ifconfig eth0 up</code> (legacy net-tools) bring an interface up. However, the Linux+ exam expects you to know the <code>ip</code> command as the preferred modern approach.</details>
+
+**2. The ARP table maps:**
+A) IP to MAC addresses  B) MAC to IP addresses  C) IP to hostnames  D) Ports to services
+
+<details><summary>Answer</summary>A — ARP (Address Resolution Protocol) maps Layer 3 IP addresses to Layer 2 MAC addresses. Use <code>ip neigh show</code> to view the ARP table on modern Linux.</details>
+
+**3. Which file typically stores persistent network configuration on RHEL/CentOS systems?**
+A) /etc/network/interfaces  B) /etc/sysconfig/network-scripts/  C) /etc/netplan/  D) /etc/hosts
+
+<details><summary>Answer</summary>B — RHEL/CentOS systems use /etc/sysconfig/network-scripts/ for persistent interface configuration. Debian/Ubuntu uses /etc/network/interfaces (older) or /etc/netplan/ (newer with Netplan/systemd-networkd).</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash

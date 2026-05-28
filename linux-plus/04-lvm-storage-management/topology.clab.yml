@@ -1,0 +1,17 @@
+name: lvm-storage-management
+
+topology:
+  nodes:
+    lvm-host:
+      kind: linux
+      image: ubuntu:22.04
+      extras:
+        privileged: true
+      exec:
+        - apt-get update -qq && apt-get install -y -qq lvm2 iproute2 util-linux e2fsprogs > /dev/null 2>&1
+        - dd if=/dev/zero of=/tmp/disk1.img bs=1M count=100 2>/dev/null
+        - dd if=/dev/zero of=/tmp/disk2.img bs=1M count=100 2>/dev/null
+        - dd if=/dev/zero of=/tmp/disk3.img bs=1M count=100 2>/dev/null
+        - losetup /dev/loop10 /tmp/disk1.img
+        - losetup /dev/loop11 /tmp/disk2.img
+        - losetup /dev/loop12 /tmp/disk3.img

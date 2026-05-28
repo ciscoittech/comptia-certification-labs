@@ -81,6 +81,39 @@ docker exec clab-ssh-key-authentication-ssh-client ssh -o StrictHostKeyChecking=
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "Permission denied (publickey) — what am I doing wrong?"
+- "What's the difference between RSA, ECDSA, and Ed25519 keys?"
+- "How do I disable password authentication after setting up SSH keys?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. SSH key authentication uses which cryptographic concept?**
+A) Symmetric encryption  B) Asymmetric (public/private) key pairs  C) Hashing only  D) Certificates only
+
+<details><summary>Answer</summary>B — SSH key authentication uses asymmetric cryptography. The private key stays on the client and is never transmitted. The server holds the public key in authorized_keys and issues a challenge that only the holder of the matching private key can answer.</details>
+
+**2. Which file on the server stores authorized public keys?**
+A) /etc/ssh/ssh_config  B) ~/.ssh/authorized_keys  C) ~/.ssh/known_hosts  D) /etc/ssh/sshd_config
+
+<details><summary>Answer</summary>B — The ~/.ssh/authorized_keys file on the server contains the public keys of clients permitted to authenticate. The file must have permissions 600 and the .ssh directory must be 700 for SSH to accept it.</details>
+
+**3. The private key should be:**
+A) Shared with the server during setup  B) Kept only on the client  C) Published publicly  D) Stored in DNS
+
+<details><summary>Answer</summary>B — The private key must never leave the client system. Only the public key is copied to servers. Exposing the private key compromises all servers that trust the corresponding public key.</details>
+
+---
+
 **Lab Version:** 1.0  
 **Last Updated:** 2025-10-07  
 **Estimated Completion Time:** 25 minutes  

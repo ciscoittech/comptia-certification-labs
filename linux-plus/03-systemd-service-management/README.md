@@ -300,6 +300,39 @@ systemctl enable nginx
 
 ---
 
+## 🤖 Try with Damira AI
+
+Stuck on this lab? [Damira AI](https://damiraai.com) can help you understand the concepts. Try these prompts (free, no credit card):
+
+- "My service won't start. journalctl shows: [paste error]"
+- "What's the difference between 'enable' and 'start' in systemctl?"
+- "How do I create a custom systemd service unit?"
+
+> Full certification study plans at [PingToPass](https://pingtopass.com)
+
+---
+
+## 📝 Practice Exam Questions
+
+Test your understanding after completing this lab:
+
+**1. Which command shows why a service failed to start?**
+A) systemctl status service  B) journalctl -u service  C) systemctl log service  D) Both A and B
+
+<details><summary>Answer</summary>D — Both commands provide failure details. <code>systemctl status</code> shows a brief status with recent log lines. <code>journalctl -u service</code> shows the full log history. There is no <code>systemctl log</code> command.</details>
+
+**2. 'systemctl enable' does what?**
+A) Starts the service now  B) Creates symlinks for boot startup  C) Restarts the service  D) Shows service status
+
+<details><summary>Answer</summary>B — <code>systemctl enable</code> creates symbolic links in /etc/systemd/system/ so the service starts automatically at boot. It does NOT start the service immediately. Use <code>systemctl enable --now</code> to both enable and start.</details>
+
+**3. The [Install] section in a unit file specifies:**
+A) Dependencies  B) When to start at boot  C) Environment variables  D) Resource limits
+
+<details><summary>Answer</summary>B — The [Install] section defines how and when the unit is activated during boot. The WantedBy= directive specifies the target (e.g., multi-user.target) that pulls in this service. Dependencies go in [Unit], environment variables in [Service].</details>
+
+---
+
 ## 🧹 Cleanup
 
 ```bash
