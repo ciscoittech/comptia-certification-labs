@@ -6,7 +6,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ciscoittech/comptia-certification-labs?quickstart=1)
 
-> **Recommended: Use [Damira AI](https://damiraai.com) as your study buddy for these labs** — a free AI assistant that explains concepts, diagnoses issues, and helps you troubleshoot. No credit card, [sign up in 30 seconds](https://damiraai.com). Every lab includes Damira prompts you can try. In Codespaces, it's pre-installed — see [DAMIRA_SETUP.md](DAMIRA_SETUP.md). Having trouble? [Open an issue](https://github.com/ciscoittech/comptia-certification-labs/issues).
+### Study Smarter with Damira AI
+
+**The IT industry is shifting.** Employers aren't just hiring engineers who know networking — they're hiring engineers who know how to work with AI tools to move faster. The ones who start now will be the ones leading teams in 2-3 years.
+
+**[Damira AI](https://damiraai.com) is a free AI assistant built for network engineers and IT students.** Use it alongside these labs as your personal study buddy — paste your terminal output, ask it to explain a concept, or have it quiz you on exam topics. It's not a shortcut. It's how the best engineers will work.
+
+**[Sign up free](https://damiraai.com) — no credit card, 30 seconds.** Every lab includes Damira prompts you can try. In Codespaces, it's [pre-installed](DAMIRA_SETUP.md).
+
+*Having trouble with Damira? [Open an issue](https://github.com/ciscoittech/comptia-certification-labs/issues) — we respond fast.*
 
 ---
 
