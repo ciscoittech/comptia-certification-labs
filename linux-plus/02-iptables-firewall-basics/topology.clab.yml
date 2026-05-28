@@ -6,22 +6,29 @@ topology:
     firewall:
       kind: linux
       image: alpine:latest
+      ports:
+        - 2221:22  # SSH access
       exec:
         - apk update
-        - apk add --no-cache iproute2 iputils iptables nginx tcpdump busybox-extras
+        - apk add --no-cache iproute2 iputils iptables iptables-legacy nginx tcpdump openssh busybox-extras
         - ip addr add 10.1.1.1/24 dev eth1
         - ip addr add 10.2.2.1/24 dev eth2
         - sysctl -w net.ipv4.ip_forward=1
-        # Default DROP policy
-        - iptables -P INPUT ACCEPT
-        - iptables -P FORWARD DROP
-        - iptables -P OUTPUT ACCEPT
+        # Default DROP policy (using iptables-legacy directly)
+        - /usr/sbin/iptables-legacy -P INPUT ACCEPT
+        - /usr/sbin/iptables-legacy -P FORWARD DROP
+        - /usr/sbin/iptables-legacy -P OUTPUT ACCEPT
         # Allow established/related connections
-        - iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
         # Allow HTTP from client to webserver
-        - iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
         # Allow ping from client to webserver
-        - iptables -A FORWARD -i eth1 -o eth2 -p icmp -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth1 -o eth2 -p icmp -j ACCEPT
+        # Configure SSH
+        - echo 'root:cisco' | chpasswd
+        - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - ssh-keygen -A
+        - /usr/sbin/sshd
 
     # Webserver
     webserver:

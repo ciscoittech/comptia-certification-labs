@@ -6,8 +6,10 @@ topology:
     firewall:
       kind: linux
       image: alpine:latest
+      ports:
+        - 2221:22  # SSH access
       exec:
-        - apk add --no-cache iproute2 iputils iptables tcpdump bridge-utils
+        - apk add --no-cache iproute2 iputils iptables iptables-legacy tcpdump openssh bridge-utils
         # External interface
         - ip addr add 203.0.113.1/24 dev eth1
         # DMZ interface
@@ -20,18 +22,23 @@ topology:
         - ip addr add 192.168.1.1/24 dev br-internal
         # Enable forwarding
         - sysctl -w net.ipv4.ip_forward=1
-        # Default DROP
-        - iptables -P FORWARD DROP
+        # Default DROP (using iptables-legacy directly)
+        - /usr/sbin/iptables-legacy -P FORWARD DROP
         # Allow established/related
-        - iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
         # External -> DMZ: Allow HTTP
-        - iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
         # DMZ -> Internal: Allow MySQL
-        - iptables -A FORWARD -i eth2 -o br-internal -p tcp --dport 3306 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth2 -o br-internal -p tcp --dport 3306 -j ACCEPT
         # Internal -> DMZ: Allow all
-        - iptables -A FORWARD -i br-internal -o eth2 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i br-internal -o eth2 -j ACCEPT
         # Internal -> External: Allow all
-        - iptables -A FORWARD -i br-internal -o eth1 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i br-internal -o eth1 -j ACCEPT
+        # Configure SSH
+        - echo 'root:cisco' | chpasswd
+        - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - ssh-keygen -A
+        - /usr/sbin/sshd
 
     # DMZ Webserver
     dmz-web:

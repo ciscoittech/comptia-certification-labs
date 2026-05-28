@@ -6,19 +6,26 @@ topology:
     router:
       kind: linux
       image: alpine:latest
+      ports:
+        - 2221:22  # SSH access
       exec:
-        - apk add --no-cache iproute2 iputils iptables tcpdump
+        - apk add --no-cache iproute2 iputils iptables iptables-legacy tcpdump openssh
         # Internal interface
         - ip addr add 10.1.1.1/24 dev eth1
         # External interface (simulated public IP)
         - ip addr add 203.0.113.1/24 dev eth2
         # Enable IP forwarding
         - sysctl -w net.ipv4.ip_forward=1
-        # Configure NAT (MASQUERADE - PAT)
-        - iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
+        # Configure NAT (MASQUERADE - PAT) using iptables-legacy directly
+        - /usr/sbin/iptables-legacy -t nat -A POSTROUTING -o eth2 -j MASQUERADE
         # Allow forwarding from internal to external
-        - iptables -A FORWARD -i eth1 -o eth2 -j ACCEPT
-        - iptables -A FORWARD -i eth2 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth1 -o eth2 -j ACCEPT
+        - /usr/sbin/iptables-legacy -A FORWARD -i eth2 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+        # Configure SSH
+        - echo 'root:cisco' | chpasswd
+        - sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - ssh-keygen -A
+        - /usr/sbin/sshd
 
     # Internal client
     internal-client:
