@@ -6,6 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ciscoittech/comptia-certification-labs?quickstart=1)
 
+> **Recommended: Use [Damira AI](https://damiraai.com) as your study buddy for these labs** — a free AI assistant that explains concepts, diagnoses issues, and helps you troubleshoot. No credit card, [sign up in 30 seconds](https://damiraai.com). Every lab includes Damira prompts you can try. In Codespaces, it's pre-installed — see [DAMIRA_SETUP.md](DAMIRA_SETUP.md). Having trouble? [Open an issue](https://github.com/ciscoittech/comptia-certification-labs/issues).
+
 ---
 
 ## 🎯 What is This?
@@ -45,20 +47,6 @@ This repository provides **9 free, containerized labs** (3 per certification) de
 | [03-network-segmentation-zones](security-plus/03-network-segmentation-zones/) | 45 min | Domain 3: Network segmentation | Intermediate |
 
 ---
-
-## 🤖 Study with AI Assistance
-
-Stuck on a lab? [Damira AI](https://damiraai.com) is a free AI assistant for network engineers and IT students. It can help you understand what's happening in each lab:
-
-> **Using GitHub Codespaces?** Damira is pre-installed — just add your free API key. See [DAMIRA_SETUP.md](DAMIRA_SETUP.md) for details.
-
-1. Sign up free at [damiraai.com](https://damiraai.com) (no credit card required)
-2. Describe what you're working on or paste your terminal output
-3. Damira explains the concept and helps you troubleshoot
-
-Works great for exam prep — ask it to explain any networking concept in the context of the lab you're working on.
-
-> Full certification study plans available at [PingToPass](https://pingtopass.com)
 
 ---
 
